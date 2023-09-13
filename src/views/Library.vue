@@ -10,8 +10,7 @@
   <div v-for="(book, index) in books" :key="index" class="col-sm-3">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title text-center">Book {{ book.id }}</h5>
-        <p class="card-text">Name: {{ book.name }}</p>
+        <h5 class="card-text text-center">{{ book.name }}</h5>
         <p class="card-text">{{ book.description }}</p>
         <p class="card-text">Author: {{ book.author }}</p>
         <p class="card-text">{{ book.dateCreated }}</p>
@@ -33,10 +32,16 @@
 </template>
 
 <script>
+// Book Data Access Object
+import bookDAO from '../database/book'
+
 // import modals
 import AddModal from '../components/modals/addBook.vue'
 import UpdateModal from '../components/modals/updateBook.vue'
 import DeleteModal from '../components/modals/deleteBook.vue'
+
+// Utils
+import dateUtil from '../utils/dateUtil';
 
 export default {
     name: 'library',
@@ -47,25 +52,30 @@ export default {
     },
     data() {
         return {
-            books: [
-                {
-                    id: '1',
-                    name: 'Book Name1',
-                    description: 'A book description1',
-                    author: 'Jonathan Robles',
-                    dateCreated: '2023/19/10',
-                    icon: '../assets/logo.svg'
-                },
-                {
-                    id: '2',
-                    name: 'Book Name2',
-                    description: 'A book description2',
-                    author: 'Jonathan Robles',
-                    dateCreated: '2023/19/10',
-                    icon: '../assets/logo.svg'
-                }
-            ]
+          newBook: {
+                name: '',
+                description: '',
+                author: '',
+                dateCreated: dateUtil.getCurrentDate(),
+                // icon: {}
+          },
+          books: []
         }
+    },
+    methods: {
+      async getAllBooks() {
+        try {
+          const retrievedBooks = await bookDAO.retrieveAllBooks();
+          this.books = retrievedBooks;
+        } catch(e) {
+          console.error("Error retreiving documents: ", e);
+          throw e;
+        }
+      },
+    },
+    // Fetch Firestore data when the component is mounted
+    async mounted() {
+      this.getAllBooks();
     }
 }
 </script>

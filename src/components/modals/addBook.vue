@@ -51,9 +51,9 @@ export default {
                 name: '',
                 description: '',
                 author: '',
-                dateCreated: dateUtil.getCurrentTimestamp(),
+                dateCreated: dateUtil.getCurrentDate(),
                 // icon: {}
-            },
+          }
         }
     },
     methods: {
@@ -61,8 +61,10 @@ export default {
       async handleSubmit() {
         try {
           await bookDAO.addBook(this.newBook);
+          alert("Added Successfully");
         } catch (e) {
           console.error("Error adding document: ", e);
+          throw e;
         }
       }
     }
