@@ -1,25 +1,28 @@
 import { db } from '../firebase/firebase'
 
-import { collection, addDoc, doc, getDocs } from "firebase/firestore";
+import { collection, addDoc, onSnapshot } from "firebase/firestore";
 
-async function retrieveAllBooks() {
+async function retrieveAllBooks(callback) {
   const bookCollection = collection(db, "books");
   let results = [];
 
   try {
-    const querySnapshot = await getDocs(bookCollection);
-
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
-      results.push({
-        id: doc.id,
-        ...doc.data(),
+    // Realtime retrieval of updates - onSnapshot
+    const unsubscribe = onSnapshot(bookCollection, (querySnapshot) => {
+      results = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+        results.push({
+          id: doc.id,
+          ...doc.data(),
+        });
       });
+      callback(results);
     });
-    return results;
+    return unsubscribe;
   } catch(e) {
-    console.error("Error adding document: ", e);
+    console.error("Error retreiving documents: ", e);
     throw e;
   }
 }
@@ -34,9 +37,6 @@ async function addBook(bookObj) {
 
     // Clear form fields after submitted
     clearFormFields(bookObj);
-
-    // Fetch updated data
-    // retrieveAllBooks();
 
   } catch (e) {
     console.error("Error adding document: ", e);

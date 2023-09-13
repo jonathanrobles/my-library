@@ -65,8 +65,11 @@ export default {
     methods: {
       async getAllBooks() {
         try {
-          const retrievedBooks = await bookDAO.retrieveAllBooks();
-          this.books = retrievedBooks;
+          let retrievedBooks = [];
+          const unsubscribe = bookDAO.retrieveAllBooks((updateData) => {
+            retrievedBooks = updateData;
+            this.books = retrievedBooks;
+          });
         } catch(e) {
           console.error("Error retreiving documents: ", e);
           throw e;
