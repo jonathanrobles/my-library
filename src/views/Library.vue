@@ -47,14 +47,6 @@ export default {
     },
     data() {
         return {
-            newBook: {
-                id: '',
-                name: '',
-                description: '',
-                author: '',
-                dateCreated: '',
-                icon: ''
-            },
             books: [
                 {
                     id: '1',
