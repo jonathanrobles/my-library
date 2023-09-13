@@ -7,10 +7,22 @@ async function addBook(bookObj) {
     const bookCollection = collection(db, "books");
     const bookRef = await addDoc(bookCollection, bookObj);
     console.log("Document written with ID: ", bookRef.id);
-    return bookRef.id;
+
+    // Clear form fields
+    clearFields(bookObj);
+
+
   } catch (e) {
     console.error("Error adding document: ", e);
     throw e;
+  }
+}
+
+async function clearFields(obj) {
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      obj[key] = ''; // You can also set it to null or undefined
+    }
   }
 }
 

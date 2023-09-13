@@ -60,9 +60,7 @@ export default {
       // Not working - I think the problem is on the function itself
       async handleSubmit() {
         try {
-          console.log(this.newBook)
-          const result = await bookDAO.addBook(this.newBook);
-          console.log(result);
+          await bookDAO.addBook(this.newBook);
         } catch (e) {
           console.error("Error adding document: ", e);
         }
