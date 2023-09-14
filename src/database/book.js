@@ -1,6 +1,6 @@
 import { db } from '../firebase/firebase'
 
-import { collection, addDoc, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, doc, deleteDoc} from "firebase/firestore";
 
 async function retrieveAllBooks(callback) {
   const bookCollection = collection(db, "books");
@@ -11,8 +11,6 @@ async function retrieveAllBooks(callback) {
     const unsubscribe = onSnapshot(bookCollection, (querySnapshot) => {
       results = [];
       querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
         results.push({
           id: doc.id,
           ...doc.data(),
@@ -56,9 +54,19 @@ async function updateBookDetails() {
 
 }
 
-async function deleteBook() {
-
+async function deleteBook(bookID) {
+  try {
+    // Reference to books documents
+    const bookRef = doc(db, "books", bookID);
+    // Delete Document
+    await deleteDoc(bookRef);
+    console.log("Book deleted successfully with ID: ", bookID);
+  } catch(e) {
+    console.error("Error deleting document: ", e);
+    throw e;
+  }
 }
+
 
 export default {
   retrieveAllBooks,

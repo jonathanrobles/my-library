@@ -12,7 +12,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger">Delete</button>
+        <button @click="deleteBookByID" type="button" class="btn btn-danger">Delete</button>
       </div>
     </div>
   </div>
@@ -20,8 +20,24 @@
 </template>
 
 <script>
-export default {
+// book DAO
+import bookDAO from '../../database/book'
 
+export default {
+  name: "deleteModal",
+  props: {
+    booksToDelete: String
+  },
+  methods: {
+    async deleteBookByID() {
+      try {
+        await bookDAO.deleteBook(this.booksToDelete);
+      } catch(e) {
+        console.log("Error deleting book");
+        throw e;
+      }
+    }
+  }
 }
 </script>
 

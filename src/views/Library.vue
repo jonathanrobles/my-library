@@ -11,14 +11,15 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-text text-center">{{ book.name }}</h5>
-        <p class="card-text">{{ book.description }}</p>
+        <p class="card-text">{{ book.id }}</p>
+        <p class="card-text">Description: {{ book.description }}</p>
         <p class="card-text">Author: {{ book.author }}</p>
         <p class="card-text">{{ book.dateCreated }}</p>
         <div class="d-grid gap-2 col-6 mx-auto">
             <!-- Update btn -->
             <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#updateModal">Update Book</button>
             <!-- Delete btn -->
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Book</button>
+            <button @click="passIdToDelete(book.id)" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Book</button>
         </div>
       </div>
     </div>
@@ -28,7 +29,7 @@
     <!-- Modals -->
     <AddModal />
     <UpdateModal />
-    <DeleteModal />
+    <DeleteModal :booksToDelete="docIdToDelete" />
 </template>
 
 <script>
@@ -59,13 +60,15 @@ export default {
                 dateCreated: dateUtil.getCurrentDate(),
                 // icon: {}
           },
-          books: []
+          books: [],
+          docIdToDelete: null
         }
     },
     methods: {
       async getAllBooks() {
         try {
           let retrievedBooks = [];
+          // retrieve data onSnapshot
           const unsubscribe = bookDAO.retrieveAllBooks((updateData) => {
             retrievedBooks = updateData;
             this.books = retrievedBooks;
@@ -75,6 +78,14 @@ export default {
           throw e;
         }
       },
+      async passIdToDelete(docID) {
+        try {
+          this.docIdToDelete = docID;
+        } catch(e) {
+          console.error("Error receiving document id: ", e);
+          throw e;
+        }
+      }
     },
     // Fetch Firestore data when the component is mounted
     async mounted() {
