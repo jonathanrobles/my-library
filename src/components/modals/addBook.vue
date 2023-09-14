@@ -61,7 +61,6 @@ export default {
       async handleSubmit() {
         try {
           await bookDAO.addBook(this.newBook);
-          alert("Added Successfully");
         } catch (e) {
           console.error("Error adding document: ", e);
           throw e;
