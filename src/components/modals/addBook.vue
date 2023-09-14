@@ -57,7 +57,6 @@ export default {
         }
     },
     methods: {
-      // Not working - I think the problem is on the function itself
       async handleSubmit() {
         try {
           await bookDAO.addBook(this.newBook);
