@@ -11,15 +11,15 @@
         <form action="" @submit.prevent="updateBookDetails">
           <div class="mb-3">
             <label for="bookName" class="form-label">Book Name</label>
-            <input v-model="updateForm.name" type="text" class="form-control" id="bookName" aria-describedby="">
+            <input v-model="updateBook.name" type="text" class="form-control" id="bookName" aria-describedby="">
           </div>
           <div class="mb-3">
             <label for="bookDesc" class="form-label">Description</label>
-            <input v-model="updateForm.description" type="text" class="form-control" id="bookDesc">
+            <input v-model="updateBook.description" type="text" class="form-control" id="bookDesc">
           </div>
           <div class="mb-3">
             <label for="bookAuthor" class="form-label">Author</label>
-            <input v-model="updateForm.author" type="text" class="form-control" id="bookAuthor">
+            <input v-model="updateBook.author" type="text" class="form-control" id="bookAuthor">
           </div>
           <!-- <div class="mb-3">
             <label for="bookIcon" class="form-label">Upload Icon</label>
@@ -37,20 +37,24 @@
 </template>
 
 <script>
-// import book database
-import { db } from '../../firebase/firebase'
-import { doc, updateDoc } from 'firebase/firestore'
+// Book Data Access Object
+import bookDAO from '../../database/book'
 
 // import utils
 import dateUtil from '../../utils/dateUtil'
 
 export default {
   name: "updateBook",
+  props: {
+    objDetails: Object
+  },
   data() {
     return {
-      updateForm: {
+      // set inital values to input fields of update form
+      updateBook: {
+        id: '',
         name: '',
-        description: '',
+        description: '',  
         author: '',
         dateCreated: dateUtil.getCurrentDate(),
         // icon: {}
@@ -58,18 +62,31 @@ export default {
     }
   },
   methods: {
+    async displayBookDetails() {
+      this.updateBook.id = this.objDetails.id || '';
+      this.updateBook.name = this.objDetails.name || '';
+      this.updateBook.description = this.objDetails.description || '';
+      this.updateBook.author = this.objDetails.author || '';
+    },
     async updateBookDetails() {
       try {
-        // Reference to books document
-        const bookCollection = doc(db, "books", this.updateForm.id);
-        // Add bookObj as docs in book collection
-        const bookRef = await updateDoc(bookCollection, this.updateForm);
-        console.log("Document written with ID: ", bookRef.id);
+        await bookDAO.updateBookDetails(this.updateBook);
       } catch (e) {
         console.error("Error adding document: ", e);
         throw e;
       }
-    } 
+    }
+  },
+  beforeMount() {
+    // Fetch data or perform data setup here
+    this.displayBookDetails();
+  },
+  watch: {
+    // Use a watcher to update the form data when objDetails changes
+    objDetails: {
+      handler: 'displayBookDetails',
+      immediate: true, // Call the handler immediately when the component is created
+    }
   }
 }
 </script>

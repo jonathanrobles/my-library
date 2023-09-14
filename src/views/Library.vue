@@ -17,7 +17,7 @@
         <p class="card-text">{{ book.dateCreated }}</p>
         <div class="d-grid gap-2 col-6 mx-auto">
             <!-- Update btn -->
-            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#updateModal">Update Book</button>
+            <button @click="passDocToUpdate(book)" type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#updateModal">Update Book</button>
             <!-- Delete btn -->
             <button @click="passIdToDelete(book.id)" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Book</button>
         </div>
@@ -28,7 +28,7 @@
 
     <!-- Modals -->
     <AddModal />
-    <UpdateModal />
+    <UpdateModal :objDetails="objToUpdate"/>
     <DeleteModal :booksToDelete="docIdToDelete" />
 </template>
 
@@ -61,7 +61,8 @@ export default {
                 // icon: {}
           },
           books: [],
-          docIdToDelete: null
+          docIdToDelete: null,
+          objToUpdate: {}
         }
     },
     methods: {
@@ -75,6 +76,14 @@ export default {
           });
         } catch(e) {
           console.error("Error retreiving documents: ", e);
+          throw e;
+        }
+      },
+      async passDocToUpdate(obj) {
+        try {
+          this.objToUpdate = obj;
+        } catch(e) {
+          console.error("Error receiving document id: ", e);
           throw e;
         }
       },

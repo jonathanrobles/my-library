@@ -1,6 +1,6 @@
 import { db } from '../firebase/firebase'
 
-import { collection, addDoc, onSnapshot, doc, deleteDoc} from "firebase/firestore";
+import { collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc} from "firebase/firestore";
 
 async function retrieveAllBooks(callback) {
   const bookCollection = collection(db, "books");
@@ -50,9 +50,19 @@ async function clearFormFields(obj) {
   }
 }
 
-async function updateBookDetails() {
-
-}
+async function updateBookDetails(updatedObjBook) {
+  try {
+    console.log(updatedObjBook)
+    // Reference to books document
+    const bookCollection = doc(db, "books", updatedObjBook.id);
+    // Update bookObj as docs in book collection
+    const bookRef = await updateDoc(bookCollection, updatedObjBook);
+    console.log("Document updated with ID: ", updatedObjBook.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    throw e;
+  } 
+} 
 
 async function deleteBook(bookID) {
   try {
