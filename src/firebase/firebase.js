@@ -6,12 +6,12 @@ import { getStorage } from "firebase/storage"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCYiYLoj1R6SvCfspf2amM5Ng_1PPOQjX8",
-  authDomain: "robles-portfolio.firebaseapp.com",
-  projectId: "robles-portfolio",
-  storageBucket: "robles-portfolio.appspot.com",
-  messagingSenderId: "619730414268",
-  appId: "1:619730414268:web:b11ef79007ee73effafeb9"
+  apiKey: "AIzaSyDagjY-0KcAj6pJ1l3VgfAG9u0XITDi1Ns",
+  authDomain: "my-portfolio-robles.firebaseapp.com",
+  projectId: "my-portfolio-robles",
+  storageBucket: "my-portfolio-robles.appspot.com",
+  messagingSenderId: "604908251269",
+  appId: "1:604908251269:web:1d904b8db0d8ac06d621ec"
 };
 
 // Initialize Firebase
