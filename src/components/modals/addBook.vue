@@ -23,7 +23,7 @@
           </div>
           <div class="mb-3">
             <label for="bookIcon" class="form-label">Upload Icon</label>
-            <input @change="uploadFile" class="form-control" type="file" id="bookIcon">
+            <input @change="uploadFile" class="form-control" type="file" id="bookIcon" accept="image/jpeg, image/png">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -68,15 +68,19 @@ export default {
         try {
           const file = event.target.files[0];
 
+          if(!file.type.startsWith('image/jpeg') && !file.type.startsWith('image/png')) {
+            alert("Invalid file type. Please select a JPEG or PNG image only.")
+            return;
+          }
+
           // Create the file metadata
           const metadata = {
-            contentType: 'image/jpeg'
+            contentType: file.type
           };
 
           // Upload file and metadata to the object 'images/mountains.jpg'
           const storageRef = ref(storage, 'images/' + file.name);
           const uploadTask = uploadBytesResumable(storageRef, file, metadata);
-          console.log("Image upload successful with ID: ", uploadTask.id);
           
           // Listen for state changes, errors, and completion of the upload.
           uploadTask.on(
