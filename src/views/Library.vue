@@ -9,6 +9,7 @@
   <div class="row mt-5">
   <div v-for="(book, index) in books" :key="index" class="col-sm-3">
     <div class="card">
+      <img :src="book.icon" class="card-img-top" :alt="book.name + ' Icon'">
       <div class="card-body">
         <h5 class="card-text text-center">{{ book.name }}</h5>
         <p class="card-text">{{ book.id }}</p>
@@ -53,13 +54,6 @@ export default {
     },
     data() {
         return {
-          newBook: {
-                name: '',
-                description: '',
-                author: '',
-                dateCreated: dateUtil.getCurrentDate(),
-                // icon: {}
-          },
           books: [],
           docIdToDelete: null,
           objToUpdate: {}
