@@ -44,7 +44,7 @@ async function addBook(bookObj) {
 
 async function clearFormFields(obj) {
   for (let key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (obj.hasOwnProperty(key) && key !== 'icon' && key !== 'dateCreated') {
       obj[key] = ''; // You can also set it to null or undefined
     }
   }

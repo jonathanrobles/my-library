@@ -64,25 +64,25 @@ export default {
     },
     methods: {
       async uploadFile(event) {
-
         try {
-          const file = event.target.files[0];
+          if(event.target && event.target.files && event.target.files[0]) {
+            const file = event.target.files[0];
 
-          if(!file.type.startsWith('image/jpeg') && !file.type.startsWith('image/png')) {
-            alert("Invalid file type. Please select a JPEG or PNG image only.")
-            return;
-          }
+            if(!file.type.startsWith('image/jpeg') && !file.type.startsWith('image/png')) {
+              alert("Invalid file type. Please select a JPEG or PNG image only.")
+              return;
+            }
 
-          // Create the file metadata
-          const metadata = {
-            contentType: file.type
-          };
+            // Create the file metadata
+            const metadata = {
+              contentType: file.type
+            };
 
-          // Upload file and metadata to the object 'images/mountains.jpg'
-          const storageRef = ref(storage, 'images/' + file.name);
-          const uploadTask = uploadBytesResumable(storageRef, file, metadata);
-          
-          // Listen for state changes, errors, and completion of the upload.
+            // Upload file and metadata to the object 'images/mountains.jpg'
+            const storageRef = ref(storage, 'images/' + file.name);
+            const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+
+            // Listen for state changes, errors, and completion of the upload.
           uploadTask.on(
             'state_changed',
             (snapshot) => {
@@ -114,6 +114,9 @@ export default {
               });
             }
           );
+          } else {
+            console.error('Invalid event object:', event);
+          }
         } catch(e) {
           console.error("Error adding document: ", e);
           throw e;
